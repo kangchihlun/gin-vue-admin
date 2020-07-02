@@ -267,3 +267,30 @@ If you find this project useful, you can buy author a glass of juice :tropical_d
 ## 10. Commercial considerations
 
 If you use this project for commercial purposes, please comply with the Apache2.0 agreement and retain the author's technical support statement.
+
+
+# Kang's Note
+- 搭建步驟：
+- 開啟以下端口
+````
+sudo iptables -I INPUT -p tcp -m tcp --dport 10911 -j ACCEPT
+
+sudo iptables -I INPUT -p tcp -m tcp --dport 8888 -j ACCEPT
+
+sudo iptables -I INPUT -p tcp -m tcp --dport 8080 -j ACCEPT
+
+````
+- 進入 devops/compose
+````
+# 啟用 mysql 及 redis 等服務
+docker-compose up
+````
+- 進入 server
+````
+go run main.go
+````
+- 訪問 localhost:8888/base/captcha
+### 2020/07/02 Kang modified
+把註冊及登入修改成 email, nickname 欄位拿掉
+
+新增 SignalTable Schema,加入第二個db連線
