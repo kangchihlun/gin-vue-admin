@@ -6,14 +6,14 @@ import uuid "github.com/satori/go.uuid"
 type RegisterStruct struct {
 	Username    string `json:"userName"`
 	Password    string `json:"passWord"`
-	NickName    string `json:"nickName" gorm:"default:'QMPlusUser'"`
+	Email       string `json:"email" gorm:"default:'QMPlusUser'"`
 	HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
 	AuthorityId string `json:"authorityId" gorm:"default:888"`
 }
 
 // User login structure
 type RegisterAndLoginStruct struct {
-	Username  string `json:"username"`
+	Email     string `json:"email"`
 	Password  string `json:"password"`
 	Captcha   string `json:"captcha"`
 	CaptchaId string `json:"captchaId"`
@@ -21,7 +21,7 @@ type RegisterAndLoginStruct struct {
 
 // Modify password structure
 type ChangePasswordStruct struct {
-	Username    string `json:"username"`
+	Email       string `json:"email"`
 	Password    string `json:"password"`
 	NewPassword string `json:"newPassword"`
 }

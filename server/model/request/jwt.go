@@ -9,7 +9,7 @@ import (
 type CustomClaims struct {
 	UUID        uuid.UUID
 	ID          uint
-	NickName    string
+	Email       string
 	AuthorityId string
 	jwt.StandardClaims
 }

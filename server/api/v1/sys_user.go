@@ -10,11 +10,12 @@ import (
 	resp "gin-vue-admin/model/response"
 	"gin-vue-admin/service"
 	"gin-vue-admin/utils"
+	"mime/multipart"
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
-	"mime/multipart"
-	"time"
 )
 
 // @Tags Base
@@ -28,7 +29,7 @@ func Register(c *gin.Context) {
 	_ = c.ShouldBindJSON(&R)
 	UserVerify := utils.Rules{
 		"Username":    {utils.NotEmpty()},
-		"NickName":    {utils.NotEmpty()},
+		"Email":       {utils.NotEmpty()},
 		"Password":    {utils.NotEmpty()},
 		"AuthorityId": {utils.NotEmpty()},
 	}
@@ -37,7 +38,7 @@ func Register(c *gin.Context) {
 		response.FailWithMessage(UserVerifyErr.Error(), c)
 		return
 	}
-	user := &model.SysUser{Username: R.Username, NickName: R.NickName, Password: R.Password, HeaderImg: R.HeaderImg, AuthorityId: R.AuthorityId}
+	user := &model.SysUser{Username: R.Username, Email: R.Email, Password: R.Password, HeaderImg: R.HeaderImg, AuthorityId: R.AuthorityId}
 	err, userReturn := service.Register(*user)
 	if err != nil {
 		response.FailWithDetailed(response.ERROR, resp.SysUserResponse{User: userReturn}, fmt.Sprintf("%v", err), c)
@@ -67,7 +68,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	if store.Verify(L.CaptchaId, L.Captcha, true) {
-		U := &model.SysUser{Username: L.Username, Password: L.Password}
+		U := &model.SysUser{Email: L.Email, Password: L.Password}
 		if err, user := service.Login(U); err != nil {
 			response.FailWithMessage(fmt.Sprintf("用户名密码错误或%v", err), c)
 		} else {
@@ -87,7 +88,7 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 	clams := request.CustomClaims{
 		UUID:        user.UUID,
 		ID:          user.ID,
-		NickName:    user.NickName,
+		Email:       user.Email,
 		AuthorityId: user.AuthorityId,
 		StandardClaims: jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 1000,       // 签名生效时间
@@ -162,7 +163,7 @@ func ChangePassword(c *gin.Context) {
 		response.FailWithMessage(UserVerifyErr.Error(), c)
 		return
 	}
-	U := &model.SysUser{Username: params.Username, Password: params.Password}
+	U := &model.SysUser{Email: params.Email, Password: params.Password}
 	if err, _ := service.ChangePassword(U, params.NewPassword); err != nil {
 		response.FailWithMessage("修改失败，请检查用户名密码", c)
 	} else {

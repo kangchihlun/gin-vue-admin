@@ -1,0 +1,101 @@
+version: "3.5"
+
+networks:
+  infura:
+  rmq:
+    name: rmq
+    driver: bridge
+
+
+services:
+  mysql:
+    restart: always
+    image: mysql:5.7.22
+    container_name: mysql
+    ports:
+      - 3306:3306
+    environment:
+      TZ: 'Asia/Taipei'
+      MYSQL_USER: 'root'
+      MYSQL_ROOT_PASSWORD: '1234'
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+      --max_allowed_packet=128M
+      --sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO"
+    volumes:
+      - mysql-store:/var/lib/mysql
+    networks:
+      - infura
+    restart: always
+
+  redis:
+    image: redis:3.2
+    volumes:
+      - ../redis/redis.conf:/etc/redis/redis.conf:ro
+      - ../redis/data:/data
+    command:
+      - redis-server
+      - /etc/redis/redis.conf
+    ports:
+      - 6379:6379
+    restart: always
+    networks:
+      - infura
+
+  rmqnamesrv:
+    image: foxiswho/rocketmq:server
+    container_name: rmqnamesrv
+    restart: always
+    ports:
+      - 9876:9876
+    volumes:
+      - ../rocket-mq/data/logs:/opt/logs
+      - ../rocket-mq/data/store:/opt/store
+    networks:
+        rmq:
+          aliases:
+            - rmqnamesrv
+
+  rmqbroker:
+    image: foxiswho/rocketmq:broker
+    container_name: rmqbroker
+    restart: always
+    ports:
+      - 10909:10909
+      - 10911:10911
+    volumes:
+      - ../rocket-mq/data/logs:/opt/logs
+      - ../rocket-mq/data/store:/opt/store
+      - ../rocket-mq/data/brokerconf/broker.conf:/etc/rocketmq/broker.conf
+    environment:
+        NAMESRV_ADDR: "rmqnamesrv:9876"
+        JAVA_OPTS: " -Duser.home=/opt"
+        JAVA_OPT_EXT: "-server -Xms128m -Xmx128m -Xmn128m"
+    command: mqbroker -c /etc/rocketmq/broker.conf
+    depends_on:
+      - rmqnamesrv
+    networks:
+      rmq:
+        aliases:
+          - rmqbroker
+
+  rmqconsole:
+    image: styletang/rocketmq-console-ng
+    container_name: rmqconsole
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+        JAVA_OPTS: "-Drocketmq.namesrv.addr=rmqnamesrv:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false"
+    depends_on:
+      - rmqnamesrv
+    networks:
+      rmq:
+        aliases:
+          - rmqconsole
+   
+volumes:
+  mysql-store:
