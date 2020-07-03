@@ -2,6 +2,7 @@ package config
 
 type Server struct {
 	Mysql   Mysql   `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
+	Mysql2  Mysql   `mapstructure:"mysql2" json:"mysql2" yaml:"mysql2"`
 	Sqlite  Sqlite  `mapstructure:"sqlite" json:"sqlite" yaml:"sqlite"`
 	Qiniu   Qiniu   `mapstructure:"qiniu" json:"qiniu" yaml:"qiniu"`
 	Casbin  Casbin  `mapstructure:"casbin" json:"casbin" yaml:"casbin"`

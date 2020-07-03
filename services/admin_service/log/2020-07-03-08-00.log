@@ -1,0 +1,7 @@
+[GIN-VUE-ADMIN]2020/07/03 - 11:41:29.316 /home/gin-vue-admin/services/admin_service/initialize/mysql.go:26 ▶ [ERROR] MySQL启动异常 Error 1049: Unknown database 'mlsrank'
+[GIN-VUE-ADMIN]2020/07/03 - 11:42:43.540 /home/gin-vue-admin/services/admin_service/initialize/db_table.go:26 ▶ [DEBUG] register table success
+[GIN-VUE-ADMIN]2020/07/03 - 11:42:43.541 /home/gin-vue-admin/services/admin_service/initialize/router.go:18 ▶ [DEBUG] use middleware logger
+[GIN-VUE-ADMIN]2020/07/03 - 11:42:43.541 /home/gin-vue-admin/services/admin_service/initialize/router.go:21 ▶ [DEBUG] use middleware cors
+[GIN-VUE-ADMIN]2020/07/03 - 11:42:43.541 /home/gin-vue-admin/services/admin_service/initialize/router.go:23 ▶ [DEBUG] register swagger handler
+[GIN-VUE-ADMIN]2020/07/03 - 11:42:43.541 /home/gin-vue-admin/services/admin_service/initialize/router.go:40 ▶ [INFO] router register success
+[GIN-VUE-ADMIN]2020/07/03 - 11:42:43.541 /home/gin-vue-admin/services/admin_service/core/server.go:33 ▶ [DEBUG] server run success on  :8888
