@@ -8,6 +8,11 @@ verify_ssl = true
 [packages]
 apscheduler = "*"
 requests = "*"
+google-api-core = "*"
+grpcio-health-checking = "*"
+grpcio = "*"
+python-json-logger = "*"
+opencensus = {extras = ["stackdriver"], version = "==0.1.10"}
 
 [requires]
 python_version = "3.7"
