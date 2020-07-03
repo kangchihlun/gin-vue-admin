@@ -4,21 +4,34 @@ package quotesig;
 
 // -----------------Cart service-----------------
 
-service CartService {
-    rpc Quote(Symbol) returns (Empty) {}
-    rpc Signal(GetCartRequest) returns (Cart) {}
-    rpc EmptyCart(EmptyCartRequest) returns (Empty) {}
+service QuoteService {
+    rpc OnNotifyTicks(Tick) returns (Empty) {}
+    rpc OnNotifyOHLC(OHLC) returns (Empty) {}
+    rpc OnNotifyTradeSignal(Signal) returns (Empty) {}
 }
 
-message Symbol {
-    string product_id = 1;
-    int32  quantity = 2;
+message Tick {
+    string symbol = 1;
+    string timestamp = 2;
+    string best_bid_price = 3;
+    string best_bid_amount = 4;
+    string best_ask_price = 5;
+    string best_ask_amount = 6;
+}
+
+message OHLC {
+    string symbol = 1;
+    string timestamp = 2;
+    string open = 3;
+    string high = 4;
+    string low = 5;
+    string close = 6;
 }
 
 message Signal {
-    string user_id = 1;
-    CartItem item = 2;
+    string symbol = 1;
+    string timestamp = 2;
+    int32 position = 3;
 }
-
 
 message Empty {}
