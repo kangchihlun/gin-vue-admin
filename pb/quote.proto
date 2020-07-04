@@ -1,6 +1,6 @@
 syntax = "proto3";
-
 package quotesig;
+option go_package = ".;quote_pb";
 
 // -----------------Cart service-----------------
 

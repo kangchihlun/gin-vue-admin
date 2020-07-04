@@ -7,10 +7,10 @@ import json
 import requests
 import asyncio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import grpc
 
 import quote_pb2
 import quote_pb2_grpc
-
 #from logger import getJSONLogger
 #logger = getJSONLogger('okex-quote-client')
 
@@ -32,7 +32,7 @@ except:
     tracer_interceptor = client_interceptor.OpenCensusClientInterceptor()
 
 # 存合約市場深度
-def cb_save_instr_market_data():
+def cb_save_instr_market_data(jsonObj):
     channel = grpc.insecure_channel(hostPort)
     channel = grpc.intercept_channel(channel, tracer_interceptor)
     stub = quote_pb2_grpc.QuoteServiceStub(channel)
@@ -102,10 +102,10 @@ if __name__ == '__main__':
     scheduler = AsyncIOScheduler()
     
     # 定時取得市場的所有標的
-    scheduler.add_job(lambda:fetch_all_instruments(), 'interval', seconds=43200 , max_instances=100)
+    scheduler.add_job(lambda:fetch_all_instruments(), 'interval', seconds=1 , max_instances=100)
     
     # 定時取得市場的所有標的 orderbook
-    scheduler.add_job(lambda:fetch_tick(), 'interval', seconds=600 , max_instances=1000) # 600 
+    scheduler.add_job(lambda:fetch_tick(), 'interval', seconds=1 , max_instances=1000) # 600 
     scheduler.start()
     try:
         print('Printing in the main thread.')
